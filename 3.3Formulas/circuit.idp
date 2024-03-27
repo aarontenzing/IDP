@@ -1,0 +1,16 @@
+vocabulary {
+    K, L, M, N, O, P, Q, R: () -> Bool
+}
+
+theory {
+// Gate A
+(K() <=> ~L() ) <=> N().
+// Gate B
+(N() <=> ~M()) <=> P().
+// Gate C
+(K() & L()) <=> O().
+// Gate D
+(M() & N()) <=> Q().
+// Gate E
+(O() | Q()) <=> R().
+}

@@ -25,10 +25,8 @@ theory T : V {
     leeftijd(Jos) > 18.
     leeftijd(Maria) > 18.
     leeftijd(Eline) > 18.
-    //!z in Mens: leeftijd(z) > 18.
     geslacht(Anne) = women => schoenmaat(Anne) < 38.
     geslacht(Maria) = women => schoenmaat(Maria) < 38.
-    //!y in Mens: geslacht(y) = women => schoenmaat(y) < 38.
     haar(Jos) = rood.  // Andere mensen kunnen eender welke haarkleur hebben
     getrouwd(Anne, Eline).
 }

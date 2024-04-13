@@ -1,7 +1,7 @@
 theory T:V {
 ColourOf(Belgium) = Red.
 ColourOf(Luxembourg) ~= ColourOf(Belgium).
-!x in country: x ~= Belgium & ~Bordering(x,Germany) & ~Bordering(x,Switzerland) <=> ColourOf(x) = Yellow.
-!x in country:  x ~= Belgium & Bordering(x,Germany) <=> ColourOf(x) = Green.
-!x in country: !y in country: Bordering(x,y) <=> ColourOf(x) ~= ColourOf(y)
+//!x in country: x ~= Belgium & ~Bordering(x,Germany) & ~Bordering(x,Switzerland) => ColourOf(x) = Yellow.
+//!x in country:  x ~= Belgium & Bordering(x,Germany) => ColourOf(x) = Green.
+!x,y  in country: Bordering(x,y) => ColourOf(x) ~= ColourOf(y).
 }

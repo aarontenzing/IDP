@@ -1,0 +1,10 @@
+theory T:V {
+
+!x in wire: On(x) <= StartOn(x).
+!x in wire: ~On(x) <= StartOff(x).
+
+// gate logic
+!x in gate: AND(x) => (On(FirstInput(x)) & On(SecondInput(x)) <=> On(Output(x))).
+!x in gate: OR(x) => (On(FirstInput(x)) | On(SecondInput(x)) <=> On(Output(x))).
+!x in gate: XOR(x) => (~On(FirstInput(x)) & On(SecondInput(x)) | On(FirstInput(x)) & ~On(SecondInput(x)) <=> On(Output(x))).
+}

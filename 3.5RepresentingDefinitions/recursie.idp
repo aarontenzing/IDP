@@ -1,0 +1,24 @@
+vocabulary V {
+    type Node := {A, B, C, D, E}
+    edge: Node * Node -> Bool
+    reachable: Node * Node -> Bool
+}
+
+
+structure S : V {
+    edge := {(A, B), (A, C), (B, E),
+             (C, D), (C, E), (D, E),
+             (E, B)}.
+}
+
+
+theory T : V{ 
+    {
+    !x,y in Node: reachable(x,y) <- edge(x,y).
+
+    }
+}
+
+procedure main() {
+    pretty_print(model_expand(T, S))
+}

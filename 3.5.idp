@@ -1,0 +1,17 @@
+vocabulary ColouredGraphVoc {
+    type Node := {A, B, C, D}
+    type Colour := { red, green, blue }
+    edge: Node * Node -> Bool
+    colourOf: Node -> Colour
+    sink: Node -> Bool
+}
+
+structure S: ColouredGraphVoc {
+    edge := {(B, C), (C, D), (D, B), (A, D)}.
+}
+
+theory T: ColouredGraphVoc {
+    !x in Node: ~(?y in Node: edge(x,y)) <=> sink(x).
+    !x in Node: sink(x) => colourOf(x) = red.
+    !x in Node: ~sink(x) => colourOf(x) = blue.
+}

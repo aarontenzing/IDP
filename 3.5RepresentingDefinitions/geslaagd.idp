@@ -1,0 +1,26 @@
+vocabulary V {
+    type Vak
+    type Score := {0..20}
+    examen_resultaat : Vak -> Score
+    geslaagd : Vak -> Bool
+    tolereren : Vak -> Bool 
+}
+
+
+structure S : V {
+Vak := { ArtificieleInt, EmbeddedDinges, ProductCert }.
+examen_resultaat := { ArtificieleInt -> 12, EmbeddedDinges -> 17, ProductCert -> 8}.
+}
+
+
+theory T : V{
+    //!x in Vak: (examen_resultaat(x) > 9) <=> geslaagd(x).
+    {
+    !x in Vak: geslaagd(x) <- (examen_resultaat(x) > 9).
+    !x in Vak: geslaagd(x) <- (examen_resultaat(x) > 7 & examen_resultaat(x) < 10 & tolereren(x)).
+    }
+}
+
+procedure main() {
+    pretty_print(model_expand(T, S))
+}

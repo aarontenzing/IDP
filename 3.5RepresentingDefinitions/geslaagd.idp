@@ -17,7 +17,8 @@ theory T : V{
     //!x in Vak: (examen_resultaat(x) > 9) <=> geslaagd(x).
     {
     !x in Vak: geslaagd(x) <- (examen_resultaat(x) > 9).
-    !x in Vak: geslaagd(x) <- (examen_resultaat(x) > 7 & examen_resultaat(x) < 10 & tolereren(x)).
+    !x in Vak: tolereren(x) <- (examen_resultaat(x) = 8 | examen_resultaat(x) = 9).
+    !x in Vak: geslaagd(x) <- tolereren(x).
     }
 }
 

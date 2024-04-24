@@ -1,0 +1,26 @@
+vocabulary V {
+    type Docent := {DVT, JVE, TGO}
+    type Vak := {ApplicatieArch, ArtificieleInt, EmbeddedDinges, Graphics, ProductCert}
+    type StudiePunten := {0..10}
+    geeft: (Docent * Vak) -> Bool
+    punten: (Vak) -> StudiePunten
+}
+
+theory T:V {
+    ~geeft(JVE, ProductCert).
+    ~geeft(JVE, EmbeddedDinges).
+    geeft(TGO, Graphics).
+    !v in Vak: #{d in Docent: geeft(d, v)} = 1.
+    !d in Docent: d ~= DVT <=> #{v in Vak: geeft(d, v)} > 1.
+    !d in Docent: sum(lambda v in Vak: if geeft(d, v) then punten(v) else 0) < 11.
+}
+
+structure S:V {
+    punten := {ApplicatieArch -> 4, ArtificieleInt -> 6,
+               EmbeddedDinges -> 5, Graphics -> 5, ProductCert -> 6}.
+}
+
+procedure main() {
+    pretty_print(model_expand(T, S))
+}
+

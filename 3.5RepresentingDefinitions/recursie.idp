@@ -14,8 +14,8 @@ structure S : V {
 
 theory T : V{ 
     {
-    !x,y in Node: reachable(x,y) <- edge(x,y).
-
+    !x, y in Node: reachable(y, x) <- edge(x, y). // edge x en y, dan is y reachable vanuit x
+    !x, y, z in Node: reachable(y, x) <- edge(z, y) & edge(x, z) & (y ~= x).
     }
 }
 

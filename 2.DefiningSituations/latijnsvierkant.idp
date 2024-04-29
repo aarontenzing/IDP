@@ -1,8 +1,8 @@
 vocabulary LatinSquareVoc {
   type cell
   type number := {1..3}
-  rows: cel*cel -> Bool
-  cols: cel*cel -> Bool
+  rows: cell*cell -> Bool
+  cols: cell*cell -> Bool
   value: cell -> number
 }
 structure Board:LatinSquareVoc {

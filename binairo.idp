@@ -1,0 +1,44 @@
+vocabulary V {
+    type Cell := {0..15}
+    type Value := {0..2}
+
+    hasValue: (Cell) -> Value
+    size: () -> Int
+
+    hasTopEdge: (Cell * Cell) -> Bool
+    hasBottomEdge: (Cell * Cell) -> Bool
+    hasRightEdge: (Cell * Cell) -> Bool
+    hasLeftEdge: (Cell * Cell) -> Bool
+
+    
+}
+
+structure S:V {
+    size := 4.
+    hasValue := {1 -> 1, 3 -> 0, 6 -> 0, 9 -> 0, 12 -> 1, 13 -> 1, 15 -> 0} else 2.
+}
+
+theory T:V {
+    {
+        !c in Cell: hasLeftEdge(c, c-1) <- c > 0 & c % size() ~= size()-1. 
+    }
+    {
+        !c in Cell: hasRightEdge(c, c+1) <- c % size() ~= size()-1.
+    }
+    {
+        !c in Cell: hasTopEdge(c, c-size()) <- c > size()-1.
+    }
+    {
+        !c in Cell: hasBottomEdge(c, c+size()) <- c < size() * size()-1.
+    }
+
+    // Alle Cellen 0 of 1
+    !x in Cell: hasValue(x) = 0 | hasValue(x) = 1.
+    // Check aanliggende Cellen
+    !x in Cell: #{y in Cell: hasTopEdge(x, y) | hasLeftEdge(x, y) | hasBottomEdge(x, y) | hasRightEdge(x, y) & hasValue(y) = 1} =< 2. 
+    !x in Cell: #{y in Cell: hasTopEdge(x, y) | hasLeftEdge(x, y) | hasBottomEdge(x, y) | hasRightEdge(x, y) & hasValue(y) = 0} =< 2. 
+    // Unieke rijen / kolommen
+    
+
+
+}

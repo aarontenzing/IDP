@@ -1,10 +1,16 @@
 vocabulary V {
     type Cell_number := {0..15}
+    type rows := {0..3}
+    type cols := {0..3}
     type Cell_value := {one, zero, empty}
     isType : (Cell_number) -> Cell_value
+    startType : (Cell_number) -> Cell_value
     size: () -> Int
+
     isRow: (Cell_number) -> Int
     isColumn: (Cell_number) -> Int
+    row_number: rows -> Int
+    col_number: cols -> Int
     connected: (Cell_number * Cell_number) -> Bool
     edge: (Cell_number * Cell_number) -> Bool
 
@@ -12,12 +18,13 @@ vocabulary V {
     isBottomEdge: (Cell_number) -> Bool
     isLeftEdge: (Cell_number) -> Bool
     isRightEdge: (Cell_number) -> Bool 
-
+    pow : rows -> Int
 }    
 
 structure S : V {
     size := 4.
-    isType := {1 -> one, 3 -> zero, 6 -> zero, 9 -> zero, 12 -> one, 13 -> one, 15 -> zero} else empty.
+    pow := {0 -> 1, 1 -> 2, 2 -> 4, 3 -> 8}.
+    startType := {1 -> one, 3 -> zero, 6 -> zero, 9 -> zero, 12 -> one, 13 -> one, 15 -> zero} else empty.
 
 }
 
@@ -38,7 +45,9 @@ theory T : V {
 
     !c in Cell_number: isColumn(c) = c % size(). 
     !c in Cell_number: isRow(c) = c / size().
-    !c in Cell_number: isType(c) ~= empty.  
+    !c in Cell_number: isType(c) ~= empty.
+
+    !c in Cell_number: startType(c) ~= empty => isType(c) = startType(c).  
 
     // Check top en bottom links en rechts
     !c in Cell_number: isBottomEdge(c) & ~isTopEdge(c) & ~isLeftEdge(c) & ~isRightEdge(c) & isType(c-1) = isType(c+1) => isType(c) ~= isType(c-1) . 
@@ -60,6 +69,8 @@ theory T : V {
 
     !c in Cell_number: ~isTopEdge(c) & isTopEdge(c+size()) & isType(c + size()) = isType(c + 2 * size()) => isType(c) ~= isType(c+size()).
 
+    !row in rows: #{c in Cell_number: isRow(c) = row & isType(c) = zero} = #{c in Cell_number: isRow(c) = row & isType(c) = one}.
+    !col in rows: #{c in Cell_number: isColumn(c) = col & isType(c) = zero} = #{c in Cell_number: isColumn(c) = col & isType(c) = one}.
 }
 
 procedure main() {

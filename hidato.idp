@@ -1,0 +1,52 @@
+vocabulary V {  
+    type cell := {0..24}
+    type value := {0..25}
+    isValue: (cell) -> value
+    startValue: (cell) -> value
+    size:  () -> Int
+    isRow: cell -> Int
+    isColumn: cell -> Int
+    isTop: cell -> Bool
+    isBottom: cell -> Bool
+    isLeft: cell -> Bool
+    isRight: cell -> Bool
+    center: cell -> Bool
+}
+
+structure S : V {
+    size := 5.
+    startValue := {0 -> 13, 2 -> 15, 6 -> 25, 7 -> 1, 8 -> 2, 9 -> 18, 11 -> 24, 13 -> 21, 15 -> 10, 17 -> 22, 18 -> 4, 19 -> 20, 20 -> 9, 23 -> 6} else 0.
+
+}
+
+theory T : V {
+
+    !c in cell: isValue(c) ~= 0.
+    !c in cell: startValue(c) ~= 0 => isValue(c) = startValue(c).
+    
+    !c in cell: isRow(c) = c / size().
+    !c in cell: isColumn(c) = c % size().
+
+    {
+        !c in cell: isTop(c) <- isRow(c) = 0. // c < size() is hetzelfde
+    }
+    {
+        !c in cell: isBottom(c) <- isRow(c) = size() - 1.
+    }
+    {
+        !c in cell: isLeft(c) <- c % size() = 0.
+    }
+    {
+        !c in cell: isRight(c) <- c % size() = size() - 1.
+    }
+
+    //Center
+    !c in cell: ~isTop(c) & ~isBottom(c) & ~isLeft(c) & ~isRight(c) <=> center(c).
+    !c in cell: center(c) => isValue(c) + 1 = isValue(c+1) | isValue(c) + 1 = isValue(c-1) | isValue(c) + 1 = isValue(c+size()) | isValue(c) + 1 = isValue(c-size()) | isValue(c)+1 = isValue(c-size()+1) | isValue(c)+1 = isValue(c-size()-1)  |  isValue(c) + 1 = isValue(c+size()+1) | isValue(c) + 1= isValue(c+size()-1).
+     // Edge
+    // !c in cell: isTop(c) & ~isLeft(c) & ~isRight(c) &
+}
+
+procedure main() {
+    pretty_print(model_expand(T, S))
+}

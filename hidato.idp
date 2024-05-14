@@ -1,6 +1,8 @@
 vocabulary V {  
     type cell := {0..24}
     type value := {0..25}
+    type shifts := {-1..1}
+
     isValue: (cell) -> value
     startValue: (cell) -> value
     size:  () -> Int
@@ -10,7 +12,7 @@ vocabulary V {
     isBottom: cell -> Bool
     isLeft: cell -> Bool
     isRight: cell -> Bool
-    center: cell -> Bool
+    isCorrect: cell -> Bool
 }
 
 structure S : V {
@@ -20,13 +22,8 @@ structure S : V {
 }
 
 theory T : V {
-
-    !c in cell: isValue(c) ~= 0.
-    !c in cell: startValue(c) ~= 0 => isValue(c) = startValue(c).
-    
     !c in cell: isRow(c) = c / size().
     !c in cell: isColumn(c) = c % size().
-
     {
         !c in cell: isTop(c) <- isRow(c) = 0. // c < size() is hetzelfde
     }
@@ -40,11 +37,26 @@ theory T : V {
         !c in cell: isRight(c) <- c % size() = size() - 1.
     }
 
-    //Center
-    !c in cell: ~isTop(c) & ~isBottom(c) & ~isLeft(c) & ~isRight(c) <=> center(c).
-    !c in cell: center(c) => isValue(c) + 1 = isValue(c+1) | isValue(c) + 1 = isValue(c-1) | isValue(c) + 1 = isValue(c+size()) | isValue(c) + 1 = isValue(c-size()) | isValue(c)+1 = isValue(c-size()+1) | isValue(c)+1 = isValue(c-size()-1)  |  isValue(c) + 1 = isValue(c+size()+1) | isValue(c) + 1= isValue(c+size()-1).
-     // Edge
-    // !c in cell: isTop(c) & ~isLeft(c) & ~isRight(c) &
+    {
+       !c in cell: isCorrect(c) <-
+            ?i, j in shifts:
+                (isTop(c) => i >= 0) &
+                (isBottom(c) => i < 1) &
+                (isLeft(c) => j >= 0) &
+                (isRight(c) => j < 1) &
+                isValue(c + i * size() + j) = isValue(c) + 1 
+        .
+    }
+    //!c1, c2 in cell: c1 ~= c2 => isValue(c1) ~= isValue(c2). // geen twee dezelfde waarde
+
+    !c in cell: isValue(c) =< size() * size().
+    !c in cell: isValue(c) > 0.
+    !c in cell: startValue(c) ~= 0 => isValue(c) = startValue(c). 
+    !c1, c2 in cell: c1 ~= c2 =>  isValue(c1) ~= isValue(c2).
+    
+    !c in cell:  isValue(c) < size()*size() => isCorrect(c) .
+
+
 }
 
 procedure main() {
